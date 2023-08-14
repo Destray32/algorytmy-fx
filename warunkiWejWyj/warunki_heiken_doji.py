@@ -49,7 +49,7 @@ def open_long_position(df, symbol):
     kwotowanie = float(kwotowanie)
 
 
-    if (long_position is None) and (signal_buy):
+    if (long_position is None) and (signal_buy.iloc[-1] == True):
         # oblicz wartość stop loss na podstawie najbliższego minimum
         stop_loss = min(round(df['Low'].iloc[-10:-1], 5))
         # obliczanie stop loss jako odelglosci w pipsach
@@ -109,7 +109,7 @@ def open_short_position(df, symbol):
                    & (df['HA_High'].iloc[-2] == df['HA_Open'].iloc[-2]) 
                    & (body_size > body_threshold))
     
-    if (short_position is None) and (signal_sell):
+    if (short_position is None) and (signal_sell.iloc[-1] == True):
         # oblicz wartość stop loss na podstawie najbliższego maksimum
         stop_loss = max(round(df['High'].iloc[-10:-1], 5))
         # otwórz nową pozycję krótką, jeśli nie ma już otwartej pozycji krótkiej i wystąpił sygnał sprzedaży

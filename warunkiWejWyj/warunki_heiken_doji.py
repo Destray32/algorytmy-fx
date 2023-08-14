@@ -36,10 +36,10 @@ def open_long_position(df, symbol):
     # Oblicz body size
     body_size = abs((df['HA_Close'] - df['HA_Open']) / df['HA_Close']) * 100
 
-    signal_buy = (df['doji'].iloc[-3] == True 
-                  and (df['HA_Close'].iloc[-2] > df['HA_Open'].iloc[-2]) 
-                  and (df['HA_Low'].iloc[-2] == df['HA_Open'].iloc[-2]) 
-                  and (body_size > body_threshold))
+    signal_buy = ((df['doji'].iloc[-3] == True) 
+                  & (df['HA_Close'].iloc[-2] > df['HA_Open'].iloc[-2]) 
+                  & (df['HA_Low'].iloc[-2] == df['HA_Open'].iloc[-2]) 
+                  & (body_size > body_threshold))
     
     # sprawdz ile zer po przecinku ma cena bid
     bid_price_digits = mt5.symbol_info(symbol).digits
@@ -104,10 +104,10 @@ def open_short_position(df, symbol):
     kwotowanie = format(kwotowanie, '.5f')
     kwotowanie = float(kwotowanie)
 
-    signal_sell = (df['doji'].iloc[-3] == True 
-                   and (df['HA_Close'].iloc[-2] < df['HA_Open'].iloc[-2]) 
-                   and (df['HA_High'].iloc[-2] == df['HA_Open'].iloc[-2]) 
-                   and (body_size > body_threshold))
+    signal_sell = ((df['doji'].iloc[-3] == True) 
+                   & (df['HA_Close'].iloc[-2] < df['HA_Open'].iloc[-2]) 
+                   & (df['HA_High'].iloc[-2] == df['HA_Open'].iloc[-2]) 
+                   & (body_size > body_threshold))
     
     if (short_position is None) and (signal_sell):
         # oblicz wartość stop loss na podstawie najbliższego maksimum

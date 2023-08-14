@@ -49,7 +49,7 @@ def open_long_position(df, symbol):
     kwotowanie = float(kwotowanie)
 
 
-    if (long_position is None):
+    if (long_position is None) and (signal_buy):
         # oblicz wartość stop loss na podstawie najbliższego minimum
         stop_loss = min(round(df['Low'].iloc[-10:-1], 5))
         # obliczanie stop loss jako odelglosci w pipsach

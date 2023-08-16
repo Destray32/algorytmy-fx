@@ -23,7 +23,14 @@ def open_long_position(df, symbol):
 
     # Oblicz świeczki Heikin Ashi
     df['HA_Close'] = (df['Open'] + df['High'] + df['Low'] + df['Close']) / 4
-    df['HA_Open'] = (df['Open'].shift(1) + df['Close'].shift(1)) / 2
+    # df['HA_Open'] = (df['Open'].shift(1) + df['Close'].shift(1)) / 2
+    df.loc[df.index[0], 'HA_Open'] = df.loc[df.index[0], 'Open']
+    df['HA_High'] = df[['High', 'HA_Open', 'HA_Close']].max(axis=1)
+    df['HA_Low'] = df[['Low', 'HA_Open', 'HA_Close']].min(axis=1)
+
+    for i in range(1, len(df)):
+        df.loc[df.index[i], 'HA_Open'] = (df.loc[df.index[i-1], 'HA_Open'] + df.loc[df.index[i-1], 'HA_Close']) / 2
+
     df['HA_High'] = df[['High', 'HA_Open', 'HA_Close']].max(axis=1)
     df['HA_Low'] = df[['Low', 'HA_Open', 'HA_Close']].min(axis=1)
 
@@ -84,7 +91,14 @@ def open_short_position(df, symbol):
 
     # Oblicz świeczki Heikin Ashi
     df['HA_Close'] = (df['Open'] + df['High'] + df['Low'] + df['Close']) / 4
-    df['HA_Open'] = (df['Open'].shift(1) + df['Close'].shift(1)) / 2
+    # df['HA_Open'] = (df['Open'].shift(1) + df['Close'].shift(1)) / 2
+    df.loc[df.index[0], 'HA_Open'] = df.loc[df.index[0], 'Open']
+    df['HA_High'] = df[['High', 'HA_Open', 'HA_Close']].max(axis=1)
+    df['HA_Low'] = df[['Low', 'HA_Open', 'HA_Close']].min(axis=1)
+
+    for i in range(1, len(df)):
+        df.loc[df.index[i], 'HA_Open'] = (df.loc[df.index[i-1], 'HA_Open'] + df.loc[df.index[i-1], 'HA_Close']) / 2
+
     df['HA_High'] = df[['High', 'HA_Open', 'HA_Close']].max(axis=1)
     df['HA_Low'] = df[['Low', 'HA_Open', 'HA_Close']].min(axis=1)
 

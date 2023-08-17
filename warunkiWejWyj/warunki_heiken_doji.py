@@ -68,7 +68,7 @@ def open_long_position(df, symbol):
         take_profit = stop_loss * 2
         # otwórz nową pozycję długą, jeśli nie ma już otwartej pozycji długiej i wystąpił sygnał kupna
         print(f'Otwieranie pozycji dlugiej dla {symbol} o godzinie {time.strftime("%H:%M:%S", time.localtime())}')
-        open_long_position_with_sl_tp(symbol, 0.1, 20, 40)
+        open_long_position_with_sl_tp(symbol, 0.1, stop_loss + 30, take_profit + 30)
     elif short_position:
         # zamknij pozycję krótką, jeśli wystąpił sygnał kupna
         close_all_positions(short_position)
@@ -153,7 +153,7 @@ def open_short_position(df, symbol):
         stop_loss = int(abs(df.iloc[-1]['Close'] - stop_loss) / kwotowanie)
         # take profit 2x stop loss RR 1:2
         take_profit = stop_loss * 2
-        open_short_position_with_sl_tp(symbol, 0.1, 20, 40)
+        open_short_position_with_sl_tp(symbol, 0.1, stop_loss + 30, take_profit + 30)
         print(f'Otwieranie pozycji krótkiej dla {symbol} o godzinie {time.strftime("%H:%M:%S", time.localtime())}')
     elif long_position:
         # zamknij pozycję długą, jeśli wystąpił sygnał sprzedaży

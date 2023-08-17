@@ -18,7 +18,7 @@ def main():
             dane = PobranieDanych(symbol=symbol, timeframe=mt5.TIMEFRAME_H1, start=0, end=400)
             open_long_position(dane, symbol)
             open_short_position(dane, symbol)
-        sleep(10)
+        sleep(30)
 
 
 if __name__ == '__main__':

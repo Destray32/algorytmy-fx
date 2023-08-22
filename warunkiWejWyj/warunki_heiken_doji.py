@@ -48,7 +48,7 @@ def open_long_position(df, symbol):
             body_size_current = abs(row['HA_Close'] - row['HA_Open'])
             body_size_prev = abs(prev_candle['HA_Close'] - prev_candle['HA_Open'])
             if (prev_candle['HA_Close'] > prev_candle['HA_Open']) and (prev_candle['HA_High'] > prev_candle['HA_Close']) and (prev_candle['HA_Low'] < prev_candle['HA_Open']) and (row['HA_Close'] > row['HA_Open']) and (row['HA_Low'] == row['HA_Open']) and (body_size_prev > body_threshold):
-                df.loc[i, 'criteria_buy'] = True
+                df.loc[i, 'criteria'] = True
             elif (row['HA_Close'] > row['HA_Open']) and (row['HA_Low'] == row['HA_Open']) and (body_size_current > body_threshold):
                 df.loc[i, 'criteria'] = True
         prev_doji = row['doji']
@@ -81,16 +81,16 @@ def open_long_position(df, symbol):
 
 
 
-    fig = go.Figure(data=[go.Candlestick(x=df.index,
-                    open=df['HA_Open'],
-                    high=df['HA_High'],
-                    low=df['HA_Low'],
-                    close=df['HA_Close'])])
+    # fig = go.Figure(data=[go.Candlestick(x=df.index,
+    #                 open=df['HA_Open'],
+    #                 high=df['HA_High'],
+    #                 low=df['HA_Low'],
+    #                 close=df['HA_Close'])])
     
-    # Dodaj punkty reprezentujące świeczki spełniające kryteria
-    fig.add_trace(go.Scatter(x=df[df['criteria']].index, y=df[df['criteria']]['HA_Close'], mode='markers', marker=dict(color='blue', size=10)))
+    # # Dodaj punkty reprezentujące świeczki spełniające kryteria
+    # fig.add_trace(go.Scatter(x=df[df['criteria']].index, y=df[df['criteria']]['HA_Close'], mode='markers', marker=dict(color='blue', size=10)))
 
-    fig.show()
+    # fig.show()
 
 
 

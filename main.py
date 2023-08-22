@@ -7,17 +7,14 @@ from pobieranie.pobranieDanych import PobranieDanych
 # from warunkiWejWyj.warunkiKeltnerCh import open_long_position, open_short_position
 from warunkiWejWyj.warunki_heiken_doji import open_long_position, open_short_position
 
-# Na Ninjatraderze jest to strategia o nazwie BolllingerBands coś tam i trójka na końcu
-
 def main():
     mt5.initialize()
-    symbols = ['US30.pro', 'US100.pro', 'EURUSD.pro', 
-               'GBPUSD.pro', 'USDJPY.pro', 'USDCHF.pro', 'AUDUSD.pro']
+    symbols = ['US500.pro']
 
     while True:
-        if datetime.datetime.now().hour > 9 and datetime.datetime.now().hour < 20:
+        if datetime.datetime.now().hour > 9 and datetime.datetime.now().hour < 22:
             for symbol in symbols:
-                dane = PobranieDanych(symbol=symbol, timeframe=mt5.TIMEFRAME_H1, start=0, end=400)
+                dane = PobranieDanych(symbol=symbol, timeframe=mt5.TIMEFRAME_H1, start=0, end=500)
                 open_long_position(dane, symbol)
                 open_short_position(dane, symbol)
             sleep(30)

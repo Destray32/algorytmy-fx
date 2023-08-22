@@ -9,9 +9,9 @@ from warunkiWejWyj.warunki_heiken_doji import open_long_position, open_short_pos
 
 def main():
     mt5.initialize()
-    # symbols = ['US500.pro', 'US100.pro', 'US30.pro',
-    #            'EURUSD.pro', 'GBPUSD.pro', 'USDJPY.pro', 'USDCHF.pro', 'USDCAD.pro']
-    symbols = ['US500.pro']
+    symbols = ['US500.pro', 'US100.pro', 'US30.pro',
+               'EURUSD.pro', 'GBPUSD.pro', 'USDJPY.pro', 'USDCHF.pro', 'USDCAD.pro']
+    #symbols = ['US500.pro']
 
     while True:
         if datetime.datetime.now().hour > 9 and datetime.datetime.now().hour < 22:
@@ -19,7 +19,7 @@ def main():
                 dane = PobranieDanych(symbol=symbol, timeframe=mt5.TIMEFRAME_H1, start=0, end=500)
                 open_long_position(dane, symbol)
                 open_short_position(dane, symbol)
-            sleep(300)
+            sleep(30)
 
 
 if __name__ == '__main__':

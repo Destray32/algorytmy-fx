@@ -77,7 +77,7 @@ def open_long_position(df, symbol):
     if long_position and symbol not in nie_doji:
         if (df.iloc[-2]['doji'] == True):
             print(f'ZAMYKANIE pozycji dlugiej dla {symbol} o godzinie {time.strftime("%H:%M:%S", time.localtime())}')
-            close_all_positions(long_position)
+            close_all_positions(symbol)
 
 
 
@@ -96,8 +96,6 @@ def open_long_position(df, symbol):
 
 
 #########################################################################################################################
-
-
 
 
 
@@ -165,9 +163,7 @@ def open_short_position(df, symbol):
     if short_position and symbol not in nie_doji:
         if (df.iloc[-2]['doji'] == True):
             print(f'ZAMYKANIE pozycji dlugiej dla {symbol} o godzinie {time.strftime("%H:%M:%S", time.localtime())}')
-            close_all_positions(short_position)
-
-
+            close_all_positions(symbol)
 
 
 

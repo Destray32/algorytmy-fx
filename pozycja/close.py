@@ -1,16 +1,26 @@
 import MetaTrader5 as mt5
 
 def close_all_positions(symbol):
+    """
+    Closes all open positions for a given symbol using the MetaTrader 5 API.
+
+    Args:
+    symbol (str): The symbol for which to close all open positions.
+
+    Returns:
+    None
+    """
     # połączenie z MetaTrader 5
     if not mt5.initialize():
         print("initialize() failed")
         mt5.shutdown()
         return
 
-    # pobranie informacji o symbolu
+    # # pobranie informacji o symbolu
     symbol_info = mt5.symbol_info(symbol)
     if symbol_info is None:
         print(f"{symbol} not found")
+        print("ELO")
         mt5.shutdown()
         return
 
@@ -37,4 +47,3 @@ def close_all_positions(symbol):
             print(f"order_send failed, retcode={result.retcode}")
         else:
             print(f"order_send succeeded, order_id={result.order}")
-

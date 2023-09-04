@@ -9,7 +9,8 @@ from warunkiWejWyj.warunki_heiken_doji import open_long_position, open_short_pos
 
 def main():
     mt5.initialize()
-    symbols = ['US500.pro', 'US100.pro', 'US30.pro', 'EURUSD.pro', 'USDJPY.pro', 'USDCAD.pro']
+    symbols = ['US500.pro', 'US100.pro', 'US30.pro', 'EURUSD.pro', 
+               'USDJPY.pro', 'USDCAD.pro', "AUDUSD.pro", "USDCHF.pro", "EURJPY.pro"]
     #symbols = ['US500.pro']
 
     while True:

@@ -10,6 +10,7 @@ from pozycja.close import close_all_positions
 
 def open_long_position(df, symbol):
     nie_doji = ['US10.pro', 'US100.pro', 'US30.pro', 'US500.pro']
+    flaga = False
     mt5.initialize()
     threshold = 0.03
     body_threshold = 0.15
@@ -18,9 +19,17 @@ def open_long_position(df, symbol):
     long_position = None
     short_position = None
     for position in open_positions:
-        if position.type == mt5.ORDER_TYPE_BUY:
+        type = position.type
+
+        if type == mt5.ORDER_TYPE_BUY:
             long_position = position
+            flaga = True
             break
+        elif type == mt5.ORDER_TYPE_SELL:
+            short_position = position
+            flaga = True
+            break
+
 
     # Oblicz świeczki Heikin Ashi (poczatkowe)
     df['HA_Close'] = (df['Open'] + df['High'] + df['Low'] + df['Close']) / 4
@@ -64,7 +73,7 @@ def open_long_position(df, symbol):
     kwotowanie = format(kwotowanie, '.5f')
     kwotowanie = float(kwotowanie)
 
-    if (long_position is None) and (df.iloc[-2]['criteria'] == True):
+    if (flaga is False) and (df.iloc[-2]['criteria'] == True):
         # oblicz wartość stop loss na podstawie najbliższego minimum
         stop_loss = min(round(df['Low'].iloc[-10:-1], 5))
         # obliczanie stop loss jako odelglosci w pipsach
@@ -101,6 +110,7 @@ def open_long_position(df, symbol):
 
 def open_short_position(df, symbol):
     nie_doji = ['US10.pro', 'US100.pro', 'US30.pro', 'US500.pro']
+    flaga = False
     mt5.initialize()
     threshold = 0.03
     body_threshold = 0.15
@@ -109,9 +119,21 @@ def open_short_position(df, symbol):
     long_position = None
     short_position = None
     for position in open_positions:
-        if position.type == mt5.ORDER_TYPE_SELL:
-            short_position = position
+        type = position.type
+
+        if type == mt5.ORDER_TYPE_BUY:
+            long_position = position
+            flaga = True
             break
+        elif type == mt5.ORDER_TYPE_SELL:
+            short_position = position
+            flaga = True
+            break
+    
+    # if open_positions is None:
+    #     print(f'Brak otwartych pozycji dla {symbol}')
+    # else:
+    #     print(f'Pozycja dla {symbol} jest otwarta')
 
     # Oblicz świeczki Heikin Ashi (poczatkowe)
     df['HA_Close'] = (df['Open'] + df['High'] + df['Low'] + df['Close']) / 4
@@ -151,7 +173,7 @@ def open_short_position(df, symbol):
     kwotowanie = format(kwotowanie, '.5f')
     kwotowanie = float(kwotowanie)
     
-    if (short_position is None) and (df.iloc[-2]['criteria'] == True):
+    if (flaga is False) and (df.iloc[-2]['criteria'] == True):
         # oblicz wartość stop loss na podstawie najbliższego maksimum
         stop_loss = max(round(df['High'].iloc[-10:-1], 5))
         # otwórz nową pozycję krótką, jeśli nie ma już otwartej pozycji krótkiej i wystąpił sygnał sprzedaży

@@ -18,17 +18,18 @@ def open_long_position(df, symbol):
     open_positions = mt5.positions_get(symbol=symbol)
     long_position = None
     short_position = None
-    for position in open_positions:
-        type = position.type
+    if open_positions is not None:
+        for position in open_positions:
+            type = position.type
 
-        if type == mt5.ORDER_TYPE_BUY:
-            long_position = position
-            flaga = True
-            break
-        elif type == mt5.ORDER_TYPE_SELL:
-            short_position = position
-            flaga = True
-            break
+            if type == mt5.ORDER_TYPE_BUY:
+                long_position = position
+                flaga = True
+                break
+            elif type == mt5.ORDER_TYPE_SELL:
+                short_position = position
+                flaga = True
+                break
 
 
     # Oblicz świeczki Heikin Ashi (poczatkowe)
@@ -118,17 +119,18 @@ def open_short_position(df, symbol):
     open_positions = mt5.positions_get(symbol=symbol)
     long_position = None
     short_position = None
-    for position in open_positions:
-        type = position.type
+    if open_positions is not None:
+        for position in open_positions:
+            type = position.type
 
-        if type == mt5.ORDER_TYPE_BUY:
-            long_position = position
-            flaga = True
-            break
-        elif type == mt5.ORDER_TYPE_SELL:
-            short_position = position
-            flaga = True
-            break
+            if type == mt5.ORDER_TYPE_BUY:
+                long_position = position
+                flaga = True
+                break
+            elif type == mt5.ORDER_TYPE_SELL:
+                short_position = position
+                flaga = True
+                break
     
     # if open_positions is None:
     #     print(f'Brak otwartych pozycji dla {symbol}')

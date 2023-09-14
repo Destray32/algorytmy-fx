@@ -8,9 +8,30 @@ from pozycja.long import open_long_position_with_sl_tp
 from pozycja.short import open_short_position_with_sl_tp
 from pozycja.close import close_all_positions
 
+from kalendarz.kalendarz_eko import Kalendarz
+
+# TODO:
+# sprawdzić czy jesteśmy akutalnie w przedziale godzinowym, 
+# w którym nie handlujemy
+
 def open_long_position(df, symbol):
+    
     nie_doji = ['US10.pro', 'US100.pro', 'US30.pro', 'US500.pro']
     flaga = False
+    highImpactNews = False
+
+    # Pobranie kalendarza ekonomicznego i czasu w którym wstrzymać się od handlu
+    if (nie_doji):
+        kalendarz = Kalendarz([symbol[:3], symbol[3:6]])
+        kalendarz.PobierzDaty()
+        kalendarz.ZnajdzGodzineWstecz()
+        kalendarz.ZnajdzGodzinePo()
+
+        # Sprawdzenie czy wstrzymać się od handlu
+        highImpactNews = kalendarz.CzyHighImpact(ile_godzin_wstecz=4)
+
+
+
     mt5.initialize()
     threshold = 0.03
     body_threshold = 0.15
@@ -74,6 +95,11 @@ def open_long_position(df, symbol):
     kwotowanie = format(kwotowanie, '.5f')
     kwotowanie = float(kwotowanie)
 
+    if (highImpactNews is True):
+        print(f'Wstrzymanie się od handlu dla {symbol} o godzinie {time.strftime("%H:%M:%S", time.localtime())}')
+        close_all_positions(symbol)
+        return
+
     if (flaga is False) and (df.iloc[-2]['criteria'] == True):
         # oblicz wartość stop loss na podstawie najbliższego minimum
         stop_loss = min(round(df['Low'].iloc[-10:-1], 5))
@@ -112,7 +138,19 @@ def open_long_position(df, symbol):
 def open_short_position(df, symbol):
     nie_doji = ['US10.pro', 'US100.pro', 'US30.pro', 'US500.pro']
     flaga = False
+    highImpactNews = False
     mt5.initialize()
+
+    # Pobranie kalendarza ekonomicznego i czasu w którym wstrzymać się od handlu
+    if (nie_doji):
+        kalendarz = Kalendarz([symbol[:3], symbol[3:6]])
+        kalendarz.PobierzDaty()
+        kalendarz.ZnajdzGodzineWstecz()
+        kalendarz.ZnajdzGodzinePo()
+
+        # Sprawdzenie czy wstrzymać się od handlu
+        highImpactNews = kalendarz.CzyHighImpact(ile_godzin_wstecz=4)
+
     threshold = 0.03
     body_threshold = 0.15
     # sprawdzenie, czy nie ma już otwartej pozycji krótkiej dla tej samej pary walutowej
@@ -174,6 +212,11 @@ def open_short_position(df, symbol):
     kwotowanie = 10 ** (-bid_price_digits) / 0.1
     kwotowanie = format(kwotowanie, '.5f')
     kwotowanie = float(kwotowanie)
+
+    if (highImpactNews is True):
+        print(f'Wstrzymanie się od handlu dla {symbol} o godzinie {time.strftime("%H:%M:%S", time.localtime())}')
+        close_all_positions(symbol)
+        return
     
     if (flaga is False) and (df.iloc[-2]['criteria'] == True):
         # oblicz wartość stop loss na podstawie najbliższego maksimum

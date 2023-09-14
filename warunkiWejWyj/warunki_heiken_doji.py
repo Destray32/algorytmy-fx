@@ -11,8 +11,7 @@ from pozycja.close import close_all_positions
 from kalendarz.kalendarz_eko import Kalendarz
 
 # TODO:
-# sprawdzić czy jesteśmy akutalnie w przedziale godzinowym, 
-# w którym nie handlujemy
+
 
 def open_long_position(df, symbol):
     
@@ -21,7 +20,7 @@ def open_long_position(df, symbol):
     highImpactNews = False
 
     # Pobranie kalendarza ekonomicznego i czasu w którym wstrzymać się od handlu
-    if (nie_doji):
+    if (symbol not in nie_doji):
         kalendarz = Kalendarz([symbol[:3], symbol[3:6]])
         kalendarz.PobierzDaty()
         kalendarz.ZnajdzGodzineWstecz()
@@ -29,6 +28,15 @@ def open_long_position(df, symbol):
 
         # Sprawdzenie czy wstrzymać się od handlu
         highImpactNews = kalendarz.CzyHighImpact(ile_godzin_wstecz=4)
+    else:
+        kalendarz = Kalendarz("USD")
+        kalendarz.PobierzDaty()
+        kalendarz.ZnajdzGodzineWstecz()
+        kalendarz.ZnajdzGodzinePo()
+
+        # Sprawdzenie czy wstrzymać się od handlu
+        highImpactNews = kalendarz.CzyHighImpact(ile_godzin_wstecz=4)
+
 
 
 
@@ -142,8 +150,16 @@ def open_short_position(df, symbol):
     mt5.initialize()
 
     # Pobranie kalendarza ekonomicznego i czasu w którym wstrzymać się od handlu
-    if (nie_doji):
+    if (symbol not in nie_doji):
         kalendarz = Kalendarz([symbol[:3], symbol[3:6]])
+        kalendarz.PobierzDaty()
+        kalendarz.ZnajdzGodzineWstecz()
+        kalendarz.ZnajdzGodzinePo()
+
+        # Sprawdzenie czy wstrzymać się od handlu
+        highImpactNews = kalendarz.CzyHighImpact(ile_godzin_wstecz=4)
+    else:
+        kalendarz = Kalendarz("USD")
         kalendarz.PobierzDaty()
         kalendarz.ZnajdzGodzineWstecz()
         kalendarz.ZnajdzGodzinePo()

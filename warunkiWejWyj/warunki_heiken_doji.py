@@ -13,7 +13,7 @@ from kalendarz.kalendarz_eko import Kalendarz
 # TODO:
 
 
-def open_long_position(df, symbol):
+def open_long_position(df, symbol, kwotowanie, newsChecking):
     
     nie_doji = ['US10.pro', 'US100.pro', 'US30.pro', 'US500.pro']
     flaga = False
@@ -36,8 +36,6 @@ def open_long_position(df, symbol):
 
         # Sprawdzenie czy wstrzymać się od handlu
         highImpactNews = kalendarz.CzyHighImpact(ile_godzin_wstecz=4)
-
-
 
 
     mt5.initialize()
@@ -96,14 +94,8 @@ def open_long_position(df, symbol):
     # Oblicz EMA dla świeczek Heikin Ashi (długość 30 podczas pierwszego testu)
     df['HA_Close_EMA'] = ta.ema(df['HA_Close'], length=35)
 
-    # sprawdz ile zer po przecinku ma cena bid
-    bid_price_digits = mt5.symbol_info(symbol).digits
 
-    kwotowanie = 10 ** (-bid_price_digits) / 0.1
-    kwotowanie = format(kwotowanie, '.5f')
-    kwotowanie = float(kwotowanie)
-
-    if (highImpactNews is True):
+    if (highImpactNews is True) and (newsChecking):
         print(f'Wstrzymanie się od handlu dla {symbol} o godzinie {time.strftime("%H:%M:%S", time.localtime())}')
         close_all_positions(symbol)
         return
@@ -143,7 +135,7 @@ def open_long_position(df, symbol):
 
 
 
-def open_short_position(df, symbol):
+def open_short_position(df, symbol, kwotowanie, newsChecking):
     nie_doji = ['US10.pro', 'US100.pro', 'US30.pro', 'US500.pro']
     flaga = False
     highImpactNews = False
@@ -222,14 +214,8 @@ def open_short_position(df, symbol):
                 df.loc[i, 'criteria'] = True
         prev_doji = row['doji']
 
-    # sprawdz ile zer po przecinku ma cena bid
-    bid_price_digits = mt5.symbol_info(symbol).digits
 
-    kwotowanie = 10 ** (-bid_price_digits) / 0.1
-    kwotowanie = format(kwotowanie, '.5f')
-    kwotowanie = float(kwotowanie)
-
-    if (highImpactNews is True):
+    if (highImpactNews is True) and (newsChecking):
         print(f'Wstrzymanie się od handlu dla {symbol} o godzinie {time.strftime("%H:%M:%S", time.localtime())}')
         close_all_positions(symbol)
         return

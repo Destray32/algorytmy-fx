@@ -11,7 +11,7 @@ def main():
             'USDJPY.pro', 'USDCAD.pro', "AUDUSD.pro", "USDCHF.pro", "EURJPY.pro"]
     kwotowania = []
     #symbols = ['USDJPY.pro']
-    check_news = True
+    check_news = False
 
     ObliczKwotowanie(symbols, kwotowania)
 

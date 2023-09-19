@@ -1,6 +1,6 @@
 import MetaTrader5 as mt5
 
-def open_short_position_with_sl_tp(symbol, volume, sl_pips, tp_pips):
+def open_short_position_with_sl_tp(symbol, volume, sl_pips, tp_pips, percentMode=False, percent=0.1):
     # połączenie z MetaTrader 5
     if not mt5.initialize():
         print("initialize() failed")
@@ -26,13 +26,20 @@ def open_short_position_with_sl_tp(symbol, volume, sl_pips, tp_pips):
     sl_points = round(sl_pips * point, 5)
     tp_points = round(tp_pips * point, 5)
 
+    if percentMode:
+        # pobranie ceny bid
+        bid = mt5.symbol_info_tick(symbol).bid
 
-    # pobranie ceny bid
-    bid = mt5.symbol_info_tick(symbol).bid
+        # obliczenie ceny stop loss i take profit
+        sl_price = bid * (1 + percent)
+        tp_price = bid * (1 - percent - 0.05)
+    else:
+        # pobranie ceny bid
+        bid = mt5.symbol_info_tick(symbol).bid
 
-    # obliczenie ceny stop loss i take profit
-    sl_price = bid + sl_points
-    tp_price = bid - tp_points
+        # obliczenie ceny stop loss i take profit
+        sl_price = bid + sl_points
+        tp_price = bid - tp_points
 
 
     # przygotowanie zlecenia sprzedaży

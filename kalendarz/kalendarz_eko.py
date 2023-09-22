@@ -21,13 +21,16 @@ class Kalendarz:
         """
         Retrieves dates from the calendar for the specified currencies.
         """
-        response = requests.get("https://nfs.faireconomy.media/ff_calendar_thisweek.json?version=821cb1b2cef35a07ce66eae15f517645")
-        data = response.json()
+        try:
+            response = requests.get("https://nfs.faireconomy.media/ff_calendar_thisweek.json?version=821cb1b2cef35a07ce66eae15f517645")
+            data = response.json()
 
-        filtered_data = [obj for obj in data if obj["country"] in self.waluta and obj["impact"] == "Low"]
-        
-        for obj in filtered_data:
-            self.daty.append(obj["date"])
+            filtered_data = [obj for obj in data if obj["country"] in self.waluta and obj["impact"] == "Low"]
+            
+            for obj in filtered_data:
+                self.daty.append(obj["date"])
+        except Exception as e:
+            print(f"An error occurred while retrieving the dates: {e}")
 
     
     def ZnajdzGodzineWstecz(self):
@@ -36,10 +39,14 @@ class Kalendarz:
         """
         one_hour = datetime.timedelta(hours=1)
         for date in self.daty:
-            date = datetime.datetime.fromisoformat(date)
-            new_date = date - one_hour
-            new_date = new_date.isoformat()
-            self.daty_wstecz.append(new_date)
+            try:
+                date = datetime.datetime.fromisoformat(date)
+                new_date = date - one_hour
+                new_date = new_date.isoformat()
+                self.daty_wstecz.append(new_date)
+            except ValueError:
+                print(f"Invalid date format: {date}")
+
 
     def ZnajdzGodzinePo(self):
         """
@@ -47,10 +54,13 @@ class Kalendarz:
         """
         one_hour = datetime.timedelta(hours=1)
         for date in self.daty:
-            date = datetime.datetime.fromisoformat(date)
-            new_date = date + one_hour
-            new_date = new_date.isoformat()
-            self.daty_po.append(new_date)
+            try:
+                date = datetime.datetime.fromisoformat(date)
+                new_date = date + one_hour
+                new_date = new_date.isoformat()
+                self.daty_po.append(new_date)
+            except ValueError:
+                print(f"Invalid date format: {date}")
 
 
     def CzyHighImpact(self, ile_godzin_wstecz):
@@ -61,8 +71,11 @@ class Kalendarz:
         iso_time = eastern_time.strftime("%Y-%m-%dT%H:%M:%S+00:00")
 
         for data in self.daty_wstecz:
-            if iso_time > data and iso_time < self.daty_po[self.daty_wstecz.index(data)]:
-                return True
+            try:
+                if iso_time > data and iso_time < self.daty_po[self.daty_wstecz.index(data)]:
+                    return True
+            except ValueError:
+                print(f"Invalid date format: {data}")
         return False
         
 

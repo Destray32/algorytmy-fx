@@ -6,10 +6,10 @@ from warunkiWejWyj.warunki_psar_ichi import open_long_position, open_short_posit
 
 def main():
     mt5.initialize()
-    symbols = ['US500.pro', 'US100.pro', 'US30.pro', 'EURUSD.pro', 
-            'USDJPY.pro', 'USDCAD.pro', "AUDUSD.pro", "USDCHF.pro", "EURJPY.pro"]
+    # symbols = ['US500.pro', 'US100.pro', 'US30.pro', 'EURUSD.pro', 
+            #'USDJPY.pro', 'USDCAD.pro', "AUDUSD.pro", "USDCHF.pro", "EURJPY.pro"]
     kwotowania = []
-    #symbols = ['USDJPY.pro']
+    symbols = ['USDJPY.pro']
     check_news = False
 
     ObliczKwotowanie(symbols, kwotowania)
@@ -17,7 +17,7 @@ def main():
     while True:
         # if datetime.datetime.now().hour > 9 and datetime.datetime.now().hour < 22:
         for symbol in symbols:
-            dane = PobranieDanych(symbol=symbol, timeframe=mt5.TIMEFRAME_H4, start=0, end=500)
+            dane = PobranieDanych(symbol=symbol, timeframe=mt5.TIMEFRAME_H1, start=0, end=500)
             open_long_position(dane, symbol, kwotowania[symbols.index(symbol)], check_news)
             open_short_position(dane, symbol, kwotowania[symbols.index(symbol)], check_news)
         sleep(50)

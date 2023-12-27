@@ -62,6 +62,8 @@ def open_long_position(df, symbol, kwotowanie, newsChecking):
         df['PSAR_DOWN'] = df.ta.psar(high=df['High'], low=df['Low'], close=df['Close'], af0=0.004, af=0.004, max_af=0.2)['PSARl_0.004_0.2']
         df['PSAR_UP'] = df.ta.psar(high=df['High'], low=df['Low'], close=df['Close'], af0=0.004, af=0.004, max_af=0.2)['PSARs_0.004_0.2']
 
+        df['ATR'] = df.ta.atr(high=df['High'], low=df['Low'], close=df['Close'], length=1)
+
         # Dodaj kolumny span_a i span_b z funkcji ichimoku
         ichimoku = ta.ichimoku(high=df['High'], low=df['Low'], close=df['Close'])
         df = pd.concat([df, ichimoku[0]], axis=1)
@@ -148,6 +150,11 @@ def open_short_position(df, symbol, kwotowanie, newsChecking):
 
         df['PSAR_DOWN'] = df.ta.psar(high=df['High'], low=df['Low'], close=df['Close'], af0=0.004, af=0.004, max_af=0.2)['PSARl_0.004_0.2']
         df['PSAR_UP'] = df.ta.psar(high=df['High'], low=df['Low'], close=df['Close'], af0=0.004, af=0.004, max_af=0.2)['PSARs_0.004_0.2']
+
+        df['ATR'] = df.ta.atr(high=df['High'], low=df['Low'], close=df['Close'], length=1)
+
+        # wypisywanie wartosci ATR
+        print(df['ATR'])
 
         # Dodaj kolumny span_a i span_b z funkcji ichimoku
         ichimoku = ta.ichimoku(high=df['High'], low=df['Low'], close=df['Close'])

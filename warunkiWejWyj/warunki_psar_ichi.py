@@ -64,14 +64,22 @@ def open_long_position(df, symbol, kwotowanie, newsChecking):
 
         df['ATR'] = df.ta.atr(high=df['High'], low=df['Low'], close=df['Close'], length=1)
 
+
         # Dodaj kolumny span_a i span_b z funkcji ichimoku
         ichimoku = ta.ichimoku(high=df['High'], low=df['Low'], close=df['Close'])
         df = pd.concat([df, ichimoku[0]], axis=1)
+
+
+        # Tu jest mniej wiecej sposób na obliczenie wartości stop loss i take profit w punktach z ATR
+        #
+        # open_long_position_with_sl_tp(symbol, 0.1, df.iloc[-1]['ATR'] + 0.016, df.iloc[-1]['ATR'] - 0.016, False, 0.1, True)
+        # 
 
         # Znajdź świeczki spełniające kryteria zakupu
         df['criteria'] = False
         criteria_met = False
         for i, row in df.iterrows():
+            # warunek sprawdza cene w stosunku do chmury ichimoku i PSAR
             if df.loc[i, 'Close'] > df.loc[i, 'ISA_9'] and df.loc[i, 'Close'] > df.loc[i, 'ISB_26'] and not np.isnan(df.loc[i, 'PSAR_DOWN']) and not criteria_met:
                 df.loc[i, 'criteria'] = True
                 criteria_met = True
@@ -152,9 +160,6 @@ def open_short_position(df, symbol, kwotowanie, newsChecking):
         df['PSAR_UP'] = df.ta.psar(high=df['High'], low=df['Low'], close=df['Close'], af0=0.004, af=0.004, max_af=0.2)['PSARs_0.004_0.2']
 
         df['ATR'] = df.ta.atr(high=df['High'], low=df['Low'], close=df['Close'], length=1)
-
-        # wypisywanie wartosci ATR
-        print(df['ATR'])
 
         # Dodaj kolumny span_a i span_b z funkcji ichimoku
         ichimoku = ta.ichimoku(high=df['High'], low=df['Low'], close=df['Close'])

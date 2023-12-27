@@ -1,6 +1,6 @@
 import MetaTrader5 as mt5
 
-def open_long_position_with_sl_tp(symbol, volume, sl_pips, tp_pips, percentMode=False, percent=0.1):
+def open_long_position_with_sl_tp(symbol, volume, sl_pips, tp_pips, percentMode=False, percent=0.1, pominKwotowanie=False):
     # połączenie z MetaTrader 5
     if not mt5.initialize():
         print("initialize() failed")
@@ -21,10 +21,14 @@ def open_long_position_with_sl_tp(symbol, volume, sl_pips, tp_pips, percentMode=
     kwotowanie = format(kwotowanie, '.5f')
     kwotowanie = float(kwotowanie)
 
-    # obliczenie wartości stop loss i take profit w punktach
-    point = kwotowanie
-    sl_points = round(sl_pips * point, 5)
-    tp_points = round(tp_pips * point, 5)
+    if not pominKwotowanie:
+        # obliczenie wartości stop loss i take profit w punktach
+        point = kwotowanie
+        sl_points = round(sl_pips * point, 5)
+        tp_points = round(tp_pips * point, 5)
+    else:
+        sl_points = sl_pips
+        tp_points = tp_pips
 
     if percentMode:
         # pobranie ceny bid
@@ -37,9 +41,13 @@ def open_long_position_with_sl_tp(symbol, volume, sl_pips, tp_pips, percentMode=
         # pobranie ceny bid
         ask = mt5.symbol_info_tick(symbol).ask
 
+        print("Ask: ", ask)
         # obliczenie ceny stop loss i take profit
         sl_price = ask - sl_points
         tp_price = ask + tp_points
+
+        print("SL: ", sl_price)
+        print("TP: ", tp_price)
 
     # przygotowanie zlecenia kupna
     request = {

@@ -22,6 +22,13 @@ def open_long_position(df, symbol, kwotowanie, newsChecking):
     highImpactNews = False
     mt5.initialize()
 
+    try:
+        # obliczanie spreadu
+        spread = mt5.symbol_info(symbol).spread * mt5.symbol_info(symbol).point
+    except:
+        spread = 0
+        print(f"Nie udało się obliczyć spreadu dla {symbol}")
+
     # Pobranie kalendarza ekonomicznego i czasu w którym wstrzymać się od handlu
     if (symbol not in nie_doji):
         kalendarz = Kalendarz([symbol[:3], symbol[3:6]])
@@ -70,11 +77,6 @@ def open_long_position(df, symbol, kwotowanie, newsChecking):
         df = pd.concat([df, ichimoku[0]], axis=1)
 
 
-        # Tu jest mniej wiecej sposób na obliczenie wartości stop loss i take profit w punktach z ATR
-        #
-        # open_long_position_with_sl_tp(symbol, 0.1, df.iloc[-1]['ATR'] + 0.016, df.iloc[-1]['ATR'] - 0.016, False, 0.1, True)
-        # 
-
         # Znajdź świeczki spełniające kryteria zakupu
         df['criteria'] = False
         criteria_met = False
@@ -97,17 +99,22 @@ def open_long_position(df, symbol, kwotowanie, newsChecking):
         if (flaga is False) and (df.iloc[-2]['criteria'] == True):
             # otwórz nową pozycję długą, jeśli nie ma już otwartej pozycji długiej i wystąpił sygnał kupna
             print(f'Otwieranie pozycji dlugiej dla {symbol} o godzinie {time.strftime("%H:%M:%S", time.localtime())}')
-            open_long_position_with_sl_tp(symbol, 0.1, 1000, 400, True, 0.1)
+            #open_long_position_with_sl_tp(symbol, 0.1, 1000, 400, True, 0.1)
+            open_long_position_with_sl_tp(symbol, 0.1, (df.iloc[-2]['ATR'] * 0.65) + spread, (df.iloc[-2]['ATR'] * 0.65) - spread, False, 0.1, True)
 
         if (flaga is True) and (np.isnan(df.iloc[-2]['PSAR_DOWN'])):
             # zamknij pozycję długą, jeśli wystąpił sygnał sprzedaży
             print(f'Zamykanie pozycji dlugiej dla {symbol} o godzinie {time.strftime("%H:%M:%S", time.localtime())}')
             close_all_positions(symbol)
 
+        
+
     except Exception as e:
         print(f"An error occurred in buying function: {e}")
 
     #print("Flaga: ", flaga)
+        
+
 
 
 
@@ -120,6 +127,14 @@ def open_short_position(df, symbol, kwotowanie, newsChecking):
     flaga = False
     highImpactNews = False
     mt5.initialize()
+
+    try:
+        # obliczanie spreadu
+        spread = mt5.symbol_info(symbol).spread * mt5.symbol_info(symbol).point
+    except:
+        spread = 0
+        print(f"Nie udało się obliczyć spreadu dla {symbol}")
+
     try:
 
         # Pobranie kalendarza ekonomicznego i czasu w którym wstrzymać się od handlu
@@ -186,15 +201,20 @@ def open_short_position(df, symbol, kwotowanie, newsChecking):
         if (flaga is False) and (df.iloc[-2]['criteria'] == True):
             # otwórz nową pozycję długą, jeśli nie ma już otwartej pozycji długiej i wystąpił sygnał kupna
             print(f'Otwieranie pozycji dlugiej dla {symbol} o godzinie {time.strftime("%H:%M:%S", time.localtime())}')
-            open_short_position_with_sl_tp(symbol, 0.1, 1200, 900, True, 0.09)
+            open_short_position_with_sl_tp(symbol, 0.1, (df.iloc[-2]['ATR'] * 0.65) + spread, (df.iloc[-2]['ATR'] * 0.65) - spread, False, 0.1, True)
 
         if (flaga is True) and (np.isnan(df.iloc[-2]['PSAR_UP'])):
             # zamknij pozycję długą, jeśli wystąpił sygnał sprzedaży
             print(f'Zamykanie pozycji dlugiej dla {symbol} o godzinie {time.strftime("%H:%M:%S", time.localtime())}')
             close_all_positions(symbol)
 
+
+
         #print("Flaga: ", flaga)
     except Exception as ex:
         print(f"An error occurred in selling function: {ex}")
+
+
+
         
 

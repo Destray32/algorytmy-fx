@@ -107,8 +107,6 @@ def open_long_position(df, symbol, kwotowanie, newsChecking):
             print(f'Zamykanie pozycji dlugiej dla {symbol} o godzinie {time.strftime("%H:%M:%S", time.localtime())}')
             close_all_positions(symbol)
 
-        
-
     except Exception as e:
         print(f"An error occurred in buying function: {e}")
 
@@ -171,8 +169,8 @@ def open_short_position(df, symbol, kwotowanie, newsChecking):
                 flaga = False
 
 
-        df['PSAR_DOWN'] = df.ta.psar(high=df['High'], low=df['Low'], close=df['Close'], af0=0.004, af=0.004, max_af=0.2)['PSARl_0.004_0.2']
-        df['PSAR_UP'] = df.ta.psar(high=df['High'], low=df['Low'], close=df['Close'], af0=0.004, af=0.004, max_af=0.2)['PSARs_0.004_0.2']
+        df['PSAR_DOWN'] = df.ta.psar(high=df['High'], low=df['Low'], close=df['Close'], af0=0.01, af=0.004, max_af=0.2)['PSARl_0.01_0.2']
+        df['PSAR_UP'] = df.ta.psar(high=df['High'], low=df['Low'], close=df['Close'], af0=0.01, af=0.004, max_af=0.2)['PSARs_0.01_0.2']
 
         df['ATR'] = df.ta.atr(high=df['High'], low=df['Low'], close=df['Close'], length=1)
 
@@ -208,9 +206,19 @@ def open_short_position(df, symbol, kwotowanie, newsChecking):
             print(f'Zamykanie pozycji dlugiej dla {symbol} o godzinie {time.strftime("%H:%M:%S", time.localtime())}')
             close_all_positions(symbol)
 
+        # fig = go.Figure(data=[go.Candlestick(x=df['time'],
+        #                 open=df['Open'],
+        #                 high=df['High'],
+        #                 low=df['Low'],
+        #                 close=df['Close'])])
+        # fig.add_trace(go.Scatter(x=df['time'], y=df['PSAR_UP'], mode='lines', name='PSAR_UP'))
+        # fig.add_trace(go.Scatter(x=df['time'], y=df['PSAR_DOWN'], mode='lines', name='PSAR_DOWN'))
+        # fig.add_trace(go.Scatter(x=df['time'], y=df['ISA_9'], mode='lines', name='ISA_9'))
+        # fig.add_trace(go.Scatter(x=df['time'], y=df['ISB_26'], mode='lines', name='ISB_26'))
+        # fig.add_trace(go.Scatter(x=df['time'], y=df['criteria'], mode='markers', name='criteria'))
+        # fig.show()
 
 
-        #print("Flaga: ", flaga)
     except Exception as ex:
         print(f"An error occurred in selling function: {ex}")
 

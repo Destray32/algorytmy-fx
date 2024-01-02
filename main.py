@@ -17,10 +17,10 @@ def main():
     while True:
         # if datetime.datetime.now().hour > 9 and datetime.datetime.now().hour < 22:
         for symbol in symbols:
-            dane = PobranieDanych(symbol=symbol, timeframe=mt5.TIMEFRAME_H1, start=0, end=500)
+            dane = PobranieDanych(symbol=symbol, timeframe=mt5.TIMEFRAME_M15, start=0, end=500)
             open_long_position(dane, symbol, kwotowania[symbols.index(symbol)], check_news)
             open_short_position(dane, symbol, kwotowania[symbols.index(symbol)], check_news)
-        sleep(50)
+        sleep(60)
 
 
 def ObliczKwotowanie(symbols, kwotowania):

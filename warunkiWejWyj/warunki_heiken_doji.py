@@ -2,7 +2,6 @@ import MetaTrader5 as mt5
 import time
 import datetime
 import pandas_ta as ta
-import plotly.graph_objs as go
 
 from pozycja.long import open_long_position_with_sl_tp
 from pozycja.short import open_short_position_with_sl_tp
@@ -117,20 +116,6 @@ def open_long_position(df, symbol, kwotowanie, newsChecking):
 
 
 
-
-    # fig = go.Figure(data=[go.Candlestick(x=df.index,
-    #                 open=df['HA_Open'],
-    #                 high=df['HA_High'],
-    #                 low=df['HA_Low'],
-    #                 close=df['HA_Close'])])
-    
-    # # Dodaj punkty reprezentujące świeczki spełniające kryteria
-    # fig.add_trace(go.Scatter(x=df[df['criteria']].index, y=df[df['criteria']]['HA_Close'], mode='markers', marker=dict(color='blue', size=10)))
-
-    # fig.show()
-
-
-
 #########################################################################################################################
 
 
@@ -235,16 +220,5 @@ def open_short_position(df, symbol, kwotowanie, newsChecking):
             close_all_positions(symbol)
 
 
-
-    # fig = go.Figure(data=[go.Candlestick(x=df.index,
-    #                 open=df['HA_Open'],
-    #                 high=df['HA_High'],
-    #                 low=df['HA_Low'],
-    #                 close=df['HA_Close'])])
-    
-    # # Dodaj punkty reprezentujące świeczki spełniające kryteria
-    # fig.add_trace(go.Scatter(x=df[df['criteria']].index, y=df[df['criteria']]['HA_Close'], mode='markers', marker=dict(color='blue', size=10)))
-
-    # fig.show()
         
 

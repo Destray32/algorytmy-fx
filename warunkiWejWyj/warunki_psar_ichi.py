@@ -1,8 +1,6 @@
 import MetaTrader5 as mt5
 import time
-import datetime
 import pandas_ta as ta
-import plotly.graph_objs as go
 import pandas as pd
 import numpy as np
 
@@ -205,19 +203,6 @@ def open_short_position(df, symbol, kwotowanie, newsChecking):
             # zamknij pozycję długą, jeśli wystąpił sygnał sprzedaży
             print(f'Zamykanie pozycji dlugiej dla {symbol} o godzinie {time.strftime("%H:%M:%S", time.localtime())}')
             close_all_positions(symbol)
-
-        # fig = go.Figure(data=[go.Candlestick(x=df['time'],
-        #                 open=df['Open'],
-        #                 high=df['High'],
-        #                 low=df['Low'],
-        #                 close=df['Close'])])
-        # fig.add_trace(go.Scatter(x=df['time'], y=df['PSAR_UP'], mode='lines', name='PSAR_UP'))
-        # fig.add_trace(go.Scatter(x=df['time'], y=df['PSAR_DOWN'], mode='lines', name='PSAR_DOWN'))
-        # fig.add_trace(go.Scatter(x=df['time'], y=df['ISA_9'], mode='lines', name='ISA_9'))
-        # fig.add_trace(go.Scatter(x=df['time'], y=df['ISB_26'], mode='lines', name='ISB_26'))
-        # fig.add_trace(go.Scatter(x=df['time'], y=df['criteria'], mode='markers', name='criteria'))
-        # fig.show()
-
 
     except Exception as ex:
         print(f"An error occurred in selling function: {ex}")

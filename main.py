@@ -9,7 +9,7 @@ def main():
     # symbols = ['US500.pro', 'US100.pro', 'US30.pro', 'EURUSD.pro', 
             #'USDJPY.pro', 'USDCAD.pro', "AUDUSD.pro", "USDCHF.pro", "EURJPY.pro"]
     kwotowania = []
-    symbols = ['USDJPY.pro']
+    symbols = ['EURUSD.pro']
     check_news = False
 
     ObliczKwotowanie(symbols, kwotowania)

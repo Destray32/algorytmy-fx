@@ -2,7 +2,7 @@ from time import sleep
 import MetaTrader5 as mt5
 
 from pobieranie.pobranieDanych import PobranieDanych
-from warunkiWejWyj.warunki_psar_ichi import open_long_position, open_short_position
+from warunkiWejWyj.warunki_psar_ichi import open_position
 
 def main():
     mt5.initialize()
@@ -18,8 +18,8 @@ def main():
         # if datetime.datetime.now().hour > 9 and datetime.datetime.now().hour < 22:
         for symbol in symbols:
             dane = PobranieDanych(symbol=symbol, timeframe=mt5.TIMEFRAME_M15, start=0, end=500)
-            open_long_position(dane, symbol, kwotowania[symbols.index(symbol)], check_news)
-            open_short_position(dane, symbol, kwotowania[symbols.index(symbol)], check_news)
+            open_position(dane, symbol, kwotowania[symbols.index(symbol)], check_news, 'long')
+            open_position(dane, symbol, kwotowania[symbols.index(symbol)], check_news, 'short')
         sleep(60)
 
 

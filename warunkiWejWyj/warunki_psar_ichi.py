@@ -10,6 +10,9 @@ from pozycja.close import close_all_positions
 
 from kalendarz.kalendarz_eko import Kalendarz
 
+# Dodaj zmienną, która liczy, ile razy PSAR się zmienił
+psar_change = 0
+
 # TODO:
 
 
@@ -94,24 +97,32 @@ def open_long_position(df, symbol, kwotowanie, newsChecking):
             close_all_positions(symbol)
             return
 
-        if (flaga is False) and (df.iloc[-2]['criteria'] == True):
-            # otwórz nową pozycję długą, jeśli nie ma już otwartej pozycji długiej i wystąpił sygnał kupna
+
+        if (flaga is False) and (df.iloc[-2]['criteria'] == True) and (psar_change >= 2):
+            # otwórz nową pozycję długą, jeśli nie ma już otwartej pozycji długiej, wystąpił sygnał kupna, ostatnia pozycja była inna niż długa i PSAR zmienił się dwa razy
             print(f'Otwieranie pozycji dlugiej dla {symbol} o godzinie {time.strftime("%H:%M:%S", time.localtime())}')
             #open_long_position_with_sl_tp(symbol, 0.1, 1000, 400, True, 0.1)
             open_long_position_with_sl_tp(symbol, 0.1, (df.iloc[-2]['ATR'] * 0.65) + spread, (df.iloc[-2]['ATR'] * 0.65) - spread, False, 0.1, True)
+            # Zresetuj zmienną liczącą zmianę PSAR
+            psar_change = 0
 
         if (flaga is True) and (np.isnan(df.iloc[-2]['PSAR_DOWN'])):
             # zamknij pozycję długą, jeśli wystąpił sygnał sprzedaży
             print(f'Zamykanie pozycji dlugiej dla {symbol} o godzinie {time.strftime("%H:%M:%S", time.localtime())}')
             close_all_positions(symbol)
 
+        # Sprawdź, czy PSAR się zmienił
+        # ta metoda jest tylko w tej funkcji bo gdybym dał ją w obu funkcjach to by się zwiększała dwukrotnie
+        if (not np.isnan(df.iloc[-2]['PSAR_DOWN']) and not np.isnan(df.iloc[-3]['PSAR_UP'])) or (not np.isnan(df.iloc[-2]['PSAR_UP']) and not np.isnan(df.iloc[-3]['PSAR_DOWN'])):
+            # Jeśli tak, zwiększ zmienną liczącą zmianę PSAR o 1
+            psar_change += 1
+            print(f'PSAR zmienił się {psar_change} razy dla {symbol} o godzinie {time.strftime("%H:%M:%S", time.localtime())}')
+
     except Exception as e:
         print(f"An error occurred in buying function: {e}")
 
     #print("Flaga: ", flaga)
         
-
-
 
 
 #########################################################################################################################
@@ -188,13 +199,13 @@ def open_short_position(df, symbol, kwotowanie, newsChecking):
                 if np.isnan(df.loc[i, 'PSAR_UP']):
                     criteria_met = False
 
-
         if (highImpactNews is True) and (newsChecking):
             print(f'Wstrzymanie się od handlu dla {symbol} o godzinie {time.strftime("%H:%M:%S", time.localtime())}')
             close_all_positions(symbol)
             return
 
-        if (flaga is False) and (df.iloc[-2]['criteria'] == True):
+
+        if (flaga is False) and (df.iloc[-2]['criteria'] == True and (psar_change >= 2)):
             # otwórz nową pozycję długą, jeśli nie ma już otwartej pozycji długiej i wystąpił sygnał kupna
             print(f'Otwieranie pozycji dlugiej dla {symbol} o godzinie {time.strftime("%H:%M:%S", time.localtime())}')
             open_short_position_with_sl_tp(symbol, 0.1, (df.iloc[-2]['ATR'] * 0.65) + spread, (df.iloc[-2]['ATR'] * 0.65) - spread, False, 0.1, True)
@@ -203,6 +214,7 @@ def open_short_position(df, symbol, kwotowanie, newsChecking):
             # zamknij pozycję długą, jeśli wystąpił sygnał sprzedaży
             print(f'Zamykanie pozycji dlugiej dla {symbol} o godzinie {time.strftime("%H:%M:%S", time.localtime())}')
             close_all_positions(symbol)
+
 
     except Exception as ex:
         print(f"An error occurred in selling function: {ex}")
